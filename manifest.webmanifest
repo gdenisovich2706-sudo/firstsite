@@ -1,0 +1,13 @@
+{
+  "name": "Мой день — планировщик",
+  "short_name": "Мой день",
+  "description": "Личный планировщик задач, целей, привычек и времени",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#030914",
+  "theme_color": "#030914",
+  "orientation": "portrait-primary",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}

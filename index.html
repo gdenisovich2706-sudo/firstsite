@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Мой день — Productivity</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">⚡ <span>Мой день</span></div>
+    <nav>
+      <button class="nav active" data-page="dashboard">🏠 Главная</button>
+      <button class="nav" data-page="tasks">📋 Задачи</button>
+      <button class="nav" data-page="goals">🎯 Цели</button>
+      <button class="nav" data-page="habits">🔥 Привычки</button>
+      <button class="nav" data-page="stats">📊 Статистика</button>
+    </nav>
+    <div class="side-bottom">
+      <button id="themeBtn" class="ghost">🌙 Тёмная тема</button>
+      <button id="notifyBtn" class="ghost">🔔 Включить уведомления</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="top">
+      <div>
+        <div class="eyebrow" id="todayLabel"></div>
+        <h1 id="pageTitle">Главная</h1>
+      </div>
+      <button class="primary" id="quickAdd">＋ Добавить задачу</button>
+    </header>
+
+    <section id="dashboard" class="page active">
+      <div class="hero">
+        <div>
+          <p class="muted">План на сегодня</p>
+          <h2 id="greeting">Давай сделаем этот день продуктивным 💪</h2>
+          <p class="muted">Запиши задачи, включи таймер и двигайся маленькими шагами.</p>
+        </div>
+        <div class="day-score"><strong id="dayDone">0/0</strong><span>задач</span></div>
+      </div>
+
+      <div class="cards four">
+        <div class="card"><span>Задачи</span><strong id="dashTasks">0/0</strong><small>выполнено сегодня</small></div>
+        <div class="card"><span>Время</span><strong id="dashTime">0м</strong><small>работы сегодня</small></div>
+        <div class="card"><span>Pomodoro</span><strong id="dashPom">0</strong><small>сессий</small></div>
+        <div class="card"><span>Серия</span><strong id="dashStreak">0 🔥</strong><small>дней подряд</small></div>
+      </div>
+
+      <div class="grid2">
+        <div class="panel">
+          <div class="panel-head"><h3>Задачи на сегодня</h3><button class="textbtn" data-go="tasks">Все задачи →</button></div>
+          <div id="todayTasks" class="list"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>Цели</h3><button class="textbtn" data-go="goals">Все цели →</button></div>
+          <div id="goalMini"></div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="panel">
+          <div class="panel-head"><h3>⏱️ Таймер</h3><span id="timerMode" class="badge">Работа</span></div>
+          <div class="timer">
+            <div id="timerDisplay">25:00</div>
+            <select id="timerGoal"></select>
+            <div class="timer-buttons"><button class="primary" id="timerStart">Старт</button><button class="secondary" id="timerReset">Сброс</button></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>🔥 Привычки сегодня</h3><button class="textbtn" data-go="habits">Управлять →</button></div>
+          <div id="habitMini"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tasks" class="page">
+      <div class="toolbar"><input id="taskSearch" placeholder="🔎 Поиск задач..."><select id="taskFilter"><option value="all">Все</option><option value="today">Сегодня</option><option value="open">Невыполненные</option><option value="done">Выполненные</option></select></div>
+      <div id="tasksList" class="list big"></div>
+    </section>
+
+    <section id="goals" class="page">
+      <div class="section-actions"><button class="primary" id="addGoal">＋ Новая цель</button></div>
+      <div id="goalsList" class="goal-grid"></div>
+    </section>
+
+    <section id="habits" class="page">
+      <div class="section-actions"><button class="primary" id="addHabit">＋ Новая привычка</button></div>
+      <div id="habitsList" class="habit-grid"></div>
+    </section>
+
+    <section id="stats" class="page">
+      <div class="cards four">
+        <div class="card"><span>Всего задач</span><strong id="statTasks">0</strong></div>
+        <div class="card"><span>Выполнено</span><strong id="statDone">0</strong></div>
+        <div class="card"><span>Часов работы</span><strong id="statHours">0</strong></div>
+        <div class="card"><span>Pomodoro</span><strong id="statPom">0</strong></div>
+      </div>
+      <div class="panel"><h3>Время по целям</h3><div id="statGoals"></div></div>
+    </section>
+  </main>
+</div>
+<nav class="mobile-nav" aria-label="Навигация">
+  <button class="nav active" data-page="dashboard"><span>⌂</span><small>Главная</small></button>
+  <button class="nav" data-page="tasks"><span>✓</span><small>Задачи</small></button>
+  <button class="nav" data-page="goals"><span>◈</span><small>Цели</small></button>
+  <button class="nav" data-page="habits"><span>↻</span><small>Привычки</small></button>
+  <button class="nav" data-page="stats"><span>▥</span><small>Стата</small></button>
+</nav>
+
+<div class="modal hidden" id="modal">
+  <div class="modal-box">
+    <button class="close" id="modalClose">×</button>
+    <h2 id="modalTitle">Новая задача</h2>
+    <form id="taskForm">
+      <input type="hidden" id="taskId">
+      <label>Название<input id="taskName" required placeholder="Например: Сделать сайт"></label>
+      <div class="form-row"><label>Дата<input id="taskDate" type="date" required></label><label>Время<input id="taskTime" type="time"></label></div>
+      <div class="form-row"><label>Приоритет<select id="taskPriority"><option value="high">🔴 Высокий</option><option value="normal" selected>🟡 Обычный</option><option value="low">🟢 Низкий</option></select></label><label>Цель<select id="taskGoal"></select></label></div>
+      <label>Напомнить<select id="taskReminder"><option value="0">Без напоминания</option><option value="5">За 5 минут</option><option value="15">За 15 минут</option><option value="30">За 30 минут</option></select></label>
+      <label>Заметка<textarea id="taskNote" rows="3" placeholder="Что нужно сделать?"></textarea></label>
+      <button class="primary full" type="submit">Сохранить</button>
+    </form>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}</script>
+</body>
+</html>
