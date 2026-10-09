@@ -7,6 +7,23 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<div id="authGate" class="auth-gate">
+  <div class="auth-card">
+    <div class="brand auth-brand">⚡ <span>Мой день</span></div>
+    <h1 id="authTitle">Вход в аккаунт</h1>
+    <p class="muted">Войди, чтобы синхронизировать задачи и цели между устройствами.</p>
+    <form id="authForm">
+      <label>Электронная почта<input id="authEmail" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+      <label>Пароль<input id="authPassword" type="password" required minlength="6" autocomplete="current-password" placeholder="Минимум 6 символов"></label>
+      <button id="authSubmit" class="primary full" type="submit">Войти</button>
+    </form>
+    <button id="authToggle" class="auth-toggle" type="button">Нет аккаунта? Зарегистрироваться</button>
+    <p id="authMessage" class="auth-message" role="status"></p>
+    <p class="auth-note">Данные хранятся в вашем аккаунте Supabase.</p>
+  </div>
+</div>
+
 <div class="app">
   <aside class="sidebar">
     <div class="brand">⚡ <span>Мой день</span></div>
@@ -18,6 +35,7 @@
       <button class="nav" data-page="stats">📊 Статистика</button>
     </nav>
     <div class="side-bottom">
+      <div id="accountBox" class="account-box"><span id="accountEmail">Не выполнен вход</span><button id="logoutBtn" class="ghost" type="button">Выйти</button></div>
       <button id="themeBtn" class="ghost">🌙 Тёмная тема</button>
       <button id="notifyBtn" class="ghost">🔔 Включить уведомления</button>
     </div>
@@ -126,6 +144,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}</script>
 </body>
