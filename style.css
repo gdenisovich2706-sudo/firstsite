@@ -68,3 +68,14 @@ body.dark .card,body.dark .panel,body.dark .goal-card,body.dark .habit-card{back
   .mobile-nav .nav.active{color:#56d5ff;background:rgba(58,153,218,.10)}
 }
 @media(min-width:601px){.mobile-nav{display:none!important}}
+
+
+/* Account and sign-in */
+.auth-gate{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle at 20% 10%,rgba(19,100,170,.24),transparent 35%),rgba(2,8,18,.96);backdrop-filter:blur(20px)}
+.auth-gate.hidden{display:none}
+.auth-card{width:min(440px,100%);padding:30px;border:1px solid rgba(93,188,240,.22);border-radius:22px;background:linear-gradient(145deg,rgba(10,31,51,.96),rgba(6,20,35,.96));box-shadow:0 25px 80px rgba(0,0,0,.5)}
+.auth-brand{padding:0 0 18px}.auth-card h1{font-size:26px;margin:0 0 8px}.auth-card p{line-height:1.5}.auth-card label{display:block;font-size:13px;font-weight:700;margin:16px 0}.auth-card input{display:block;width:100%;box-sizing:border-box;margin-top:7px;padding:13px;border:1px solid var(--line2);border-radius:10px;background:rgba(3,15,28,.85);color:var(--text);outline:none}.auth-toggle{display:block;width:100%;margin-top:14px;background:transparent;color:var(--cyan);padding:8px}.auth-message{min-height:20px;color:#ffb7a9;font-size:13px}.auth-message.success{color:#8ee8bd}.auth-note{font-size:12px;color:var(--muted)}
+.account-box{display:grid;gap:6px;padding:10px;border-top:1px solid var(--line);overflow-wrap:anywhere;font-size:11px;color:var(--muted)}.account-box .ghost{font-size:12px;text-align:left;padding:8px}
+@media(max-width:900px){.account-box{display:none}}
+
+.cloud-status{font-size:11px;color:var(--muted);margin-top:4px}.cloud-status.success{color:#8ee8bd}
