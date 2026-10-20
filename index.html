@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Мой день — Productivity</title>
+  <meta name="theme-color" content="#0b0b0c">
+  <title>Мой день</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="authGate" class="auth-gate">
   <div class="auth-card">
-    <div class="brand auth-brand">⚡ <span>Мой день</span></div>
+    <div class="brand auth-brand"><span>Мой день</span></div>
     <h1 id="authTitle">Вход в аккаунт</h1>
-    <p class="muted">Войди, чтобы синхронизировать задачи и цели между устройствами.</p>
+    <p class="muted">Войдите, чтобы синхронизировать задачи и цели между устройствами.</p>
     <form id="authForm">
       <label>Электронная почта<input id="authEmail" type="email" required autocomplete="email" placeholder="you@example.com"></label>
       <label>Пароль<input id="authPassword" type="password" required minlength="6" autocomplete="current-password" placeholder="Минимум 6 символов"></label>
@@ -26,18 +27,18 @@
 
 <div class="app">
   <aside class="sidebar">
-    <div class="brand">⚡ <span>Мой день</span></div>
+    <div class="brand"><span>Мой день</span></div>
     <nav>
-      <button class="nav active" data-page="dashboard">🏠 Главная</button>
-      <button class="nav" data-page="tasks">📋 Задачи</button>
-      <button class="nav" data-page="goals">🎯 Цели</button>
-      <button class="nav" data-page="habits">🔥 Привычки</button>
-      <button class="nav" data-page="stats">📊 Статистика</button>
+      <button class="nav active" data-page="dashboard">Главная</button>
+      <button class="nav" data-page="tasks">Задачи</button>
+      <button class="nav" data-page="goals">Цели</button>
+      <button class="nav" data-page="habits">Привычки</button>
+      <button class="nav" data-page="stats">Статистика</button>
     </nav>
     <div class="side-bottom">
       <div id="accountBox" class="account-box"><span id="accountEmail">Не выполнен вход</span><button id="logoutBtn" class="ghost" type="button">Выйти</button></div>
-      <button id="themeBtn" class="ghost">🌙 Тёмная тема</button>
-      <button id="notifyBtn" class="ghost">🔔 Включить уведомления</button>
+      <button id="themeBtn" class="ghost">Тёмная тема</button>
+      <button id="notifyBtn" class="ghost">Уведомления</button>
     </div>
   </aside>
 
@@ -47,65 +48,74 @@
         <div class="eyebrow" id="todayLabel"></div>
         <h1 id="pageTitle">Главная</h1>
       </div>
-      <button class="primary" id="quickAdd">＋ Добавить задачу</button>
+      <button class="primary" id="quickAdd">Новая задача</button>
     </header>
 
     <section id="dashboard" class="page active">
-      <div class="hero">
-        <div>
-          <p class="muted">План на сегодня</p>
-          <h2 id="greeting">Давай сделаем этот день продуктивным 💪</h2>
-          <p class="muted">Запиши задачи, включи таймер и двигайся маленькими шагами.</p>
-        </div>
-        <div class="day-score"><strong id="dayDone">0/0</strong><span>задач</span></div>
-      </div>
+      <article class="focus-card" id="mainGoal"></article>
 
       <div class="cards four">
-        <div class="card"><span>Задачи</span><strong id="dashTasks">0/0</strong><small>выполнено сегодня</small></div>
-        <div class="card"><span>Время</span><strong id="dashTime">0м</strong><small>работы сегодня</small></div>
+        <div class="card"><span>Сегодня</span><strong id="dayDone">0/0</strong><small>задач</small></div>
+        <div class="card"><span>Фокус</span><strong id="dashTime">0м</strong><small>работы сегодня</small></div>
         <div class="card"><span>Pomodoro</span><strong id="dashPom">0</strong><small>сессий</small></div>
-        <div class="card"><span>Серия</span><strong id="dashStreak">0 🔥</strong><small>дней подряд</small></div>
+        <div class="card"><span>Серия</span><strong id="dashStreak">0</strong><small>дней подряд</small></div>
       </div>
 
-      <div class="grid2">
-        <div class="panel">
-          <div class="panel-head"><h3>Задачи на сегодня</h3><button class="textbtn" data-go="tasks">Все задачи →</button></div>
+      <div class="dash-layout">
+        <div class="panel panel-today">
+          <div class="panel-head">
+            <div>
+              <h3>Задачи на сегодня</h3>
+              <p class="muted" id="greeting">Список на текущую дату. Отметьте выполненное или добавьте новую задачу.</p>
+            </div>
+            <button class="textbtn" data-go="tasks" type="button">Все задачи</button>
+          </div>
           <div id="todayTasks" class="list"></div>
         </div>
-        <div class="panel">
-          <div class="panel-head"><h3>Цели</h3><button class="textbtn" data-go="goals">Все цели →</button></div>
-          <div id="goalMini"></div>
+
+        <div class="dash-side">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Ближайшие цели</h3>
+              <button class="textbtn" data-go="goals" type="button">Все цели</button>
+            </div>
+            <div id="goalMini"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h3>Таймер</h3><span id="timerMode" class="badge">Работа</span></div>
+            <div class="timer">
+              <div id="timerDisplay">25:00</div>
+              <select id="timerGoal"></select>
+              <div class="timer-buttons"><button class="primary" id="timerStart">Старт</button><button class="secondary" id="timerReset">Сброс</button></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Привычки сегодня</h3>
+              <button class="textbtn" data-go="habits" type="button">Все</button>
+            </div>
+            <div id="habitMini"></div>
+          </div>
         </div>
       </div>
 
-      <div class="grid2">
-        <div class="panel">
-          <div class="panel-head"><h3>⏱️ Таймер</h3><span id="timerMode" class="badge">Работа</span></div>
-          <div class="timer">
-            <div id="timerDisplay">25:00</div>
-            <select id="timerGoal"></select>
-            <div class="timer-buttons"><button class="primary" id="timerStart">Старт</button><button class="secondary" id="timerReset">Сброс</button></div>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><h3>🔥 Привычки сегодня</h3><button class="textbtn" data-go="habits">Управлять →</button></div>
-          <div id="habitMini"></div>
-        </div>
-      </div>
+      <p class="sr-only">Выполнено сегодня: <span id="dashTasks">0/0</span></p>
     </section>
 
     <section id="tasks" class="page">
-      <div class="toolbar"><input id="taskSearch" placeholder="🔎 Поиск задач..."><select id="taskFilter"><option value="all">Все</option><option value="today">Сегодня</option><option value="open">Невыполненные</option><option value="done">Выполненные</option></select></div>
+      <div class="toolbar"><input id="taskSearch" placeholder="Поиск задач"><select id="taskFilter"><option value="all">Все</option><option value="today">Сегодня</option><option value="open">Невыполненные</option><option value="done">Выполненные</option></select></div>
       <div id="tasksList" class="list big"></div>
     </section>
 
     <section id="goals" class="page">
-      <div class="section-actions"><button class="primary" id="addGoal">＋ Новая цель</button></div>
+      <div class="section-actions"><button class="primary" id="addGoal">Новая цель</button></div>
       <div id="goalsList" class="goal-grid"></div>
     </section>
 
     <section id="habits" class="page">
-      <div class="section-actions"><button class="primary" id="addHabit">＋ Новая привычка</button></div>
+      <div class="section-actions"><button class="primary" id="addHabit">Новая привычка</button></div>
       <div id="habitsList" class="habit-grid"></div>
     </section>
 
@@ -136,7 +146,7 @@
       <input type="hidden" id="taskId">
       <label>Название<input id="taskName" required placeholder="Например: Сделать сайт"></label>
       <div class="form-row"><label>Дата<input id="taskDate" type="date" required></label><label>Время<input id="taskTime" type="time"></label></div>
-      <div class="form-row"><label>Приоритет<select id="taskPriority"><option value="high">🔴 Высокий</option><option value="normal" selected>🟡 Обычный</option><option value="low">🟢 Низкий</option></select></label><label>Цель<select id="taskGoal"></select></label></div>
+      <div class="form-row"><label>Приоритет<select id="taskPriority"><option value="high">Высокий</option><option value="normal" selected>Обычный</option><option value="low">Низкий</option></select></label><label>Цель<select id="taskGoal"></select></label></div>
       <label>Напомнить<select id="taskReminder"><option value="0">Без напоминания</option><option value="5">За 5 минут</option><option value="15">За 15 минут</option><option value="30">За 30 минут</option></select></label>
       <label>Заметка<textarea id="taskNote" rows="3" placeholder="Что нужно сделать?"></textarea></label>
       <button class="primary full" type="submit">Сохранить</button>

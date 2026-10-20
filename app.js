@@ -115,21 +115,36 @@ function render(){
   renderTasks(); renderGoals(); renderHabits(); renderStats(); fillGoals();
 }
 function taskHTML(t){
+  const pr=t.priority==="high"?"high":t.priority==="low"?"low":"normal";
+  const prLabel=pr==="high"?"Высокий":pr==="low"?"Низкий":"Обычный";
   return `<div class="task ${t.done?"done":""}">
-    <button class="check" onclick="toggleTask('${t.id}')">${t.done?"✓":""}</button>
-    <div class="task-main"><div class="task-title">${esc(t.name)}</div><div class="task-meta">${t.time?t.time+" · ":""}${t.priority==="high"?"🔴":t.priority==="low"?"🟢":"🟡"} · ${esc(goalName(t.goal))}${t.note?" · "+esc(t.note):""}</div></div>
-    <div class="task-actions"><button class="icon edit" onclick="editTask('${t.id}')">✏️</button><button class="icon" onclick="deleteTask('${t.id}')">🗑️</button></div>
+    <div class="task-time">${t.time?esc(t.time):"—"}</div>
+    <button class="check" onclick="toggleTask('${t.id}')" aria-label="${t.done?"Снять отметку":"Выполнить"}">${t.done?"✓":""}</button>
+    <div class="task-main"><div class="task-title">${esc(t.name)}</div><div class="task-meta">${esc(goalName(t.goal))}${t.note?" · "+esc(t.note):""}</div></div>
+    <span class="prio prio-${pr}">${prLabel}</span>
+    <div class="task-actions"><button class="icon edit" onclick="editTask('${t.id}')" aria-label="Изменить">Изменить</button><button class="icon" onclick="deleteTask('${t.id}')" aria-label="Удалить">Удалить</button></div>
   </div>`
 }
 function renderTasks(){
   const q=(document.getElementById("taskSearch")?.value||"").toLowerCase(), f=document.getElementById("taskFilter")?.value||"all", d=today();
   let arr=data.tasks.filter(t=>(!q||t.name.toLowerCase().includes(q))&&(f==="all"||f==="today"&&t.date===d||f==="open"&&!t.done||f==="done"&&t.done));
-  document.getElementById("tasksList").innerHTML=arr.length?arr.sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).map(taskHTML).join(""):"<p class='muted'>Задач пока нет. Самое время добавить первую 🚀</p>";
-  document.getElementById("todayTasks").innerHTML=data.tasks.filter(t=>t.date===d).sort((a,b)=>(a.time||"99").localeCompare(b.time||"99")).slice(0,6).map(taskHTML).join("")||"<p class='muted'>На сегодня задач нет.</p>";
+  document.getElementById("tasksList").innerHTML=arr.length?arr.sort((a,b)=>(a.date+(a.time||"")).localeCompare(b.date+(b.time||""))).map(taskHTML).join(""):"<p class='muted'>Задач пока нет.</p>";
+  document.getElementById("todayTasks").innerHTML=data.tasks.filter(t=>t.date===d).sort((a,b)=>(a.time||"99").localeCompare(b.time||"99")).map(taskHTML).join("")||"<p class='muted'>На сегодня задач нет.</p>";
 }
 function renderGoals(){
-  document.getElementById("goalsList").innerHTML=data.goals.map(g=>{let p=Math.min(100,g.target?g.done/g.target*100:0);return `<div class="goal-card"><div class="goal-title"><h3>${esc(g.name)}</h3><b>${fmtMin(g.done*60).replace("ч ","ч ")}</b></div><div class="muted">${g.done} / ${g.target} часов</div><div class="progress"><div class="bar" style="width:${p}%"></div></div><div class="goal-actions"><button onclick="addGoalTime('${g.id}',.5)">+30 мин</button><button onclick="addGoalTime('${g.id}',1)">+1 час</button><button onclick="deleteGoal('${g.id}')">🗑️</button></div></div>`}).join("");
-  document.getElementById("goalMini").innerHTML=data.goals.slice(0,4).map(g=>{let p=Math.min(100,g.done/g.target*100);return `<div class="barline"><span>${esc(g.name)}</span><div class="progress"><div class="bar" style="width:${p}%"></div></div><b>${g.done}/${g.target}ч</b></div>`}).join("");
+  const main=data.goals.length?data.goals.reduce((a,b)=>(Number(b.target)||0)>(Number(a.target)||0)?b:a):null;
+  const mainEl=document.getElementById("mainGoal");
+  if(mainEl){
+    if(!main){
+      mainEl.innerHTML="<p class='eyebrow'>Главная цель</p><h2>Цель ещё не добавлена</h2><p class='muted'>Добавьте цель во вкладке «Цели» — здесь появится прогресс по часам.</p>";
+    }else{
+      const p=Math.min(100,main.target?main.done/main.target*100:0);
+      mainEl.innerHTML=`<p class="eyebrow">Главная цель</p><h2>${esc(main.name)}</h2><div class="focus-meta"><span>${main.done} / ${main.target} ч</span><b>${Math.round(p)}%</b></div><div class="progress large"><div class="bar" style="width:${p}%"></div></div>`;
+    }
+  }
+  document.getElementById("goalsList").innerHTML=data.goals.map(g=>{let p=Math.min(100,g.target?g.done/g.target*100:0);return `<div class="goal-card"><div class="goal-title"><h3>${esc(g.name)}</h3><b>${fmtMin(g.done*60)}</b></div><div class="muted">${g.done} / ${g.target} часов</div><div class="progress"><div class="bar" style="width:${p}%"></div></div><div class="goal-actions"><button onclick="addGoalTime('${g.id}',.5)">+30 мин</button><button onclick="addGoalTime('${g.id}',1)">+1 час</button><button onclick="deleteGoal('${g.id}')">Удалить</button></div></div>`}).join("")||"<p class='muted'>Целей пока нет.</p>";
+  const rest=main?data.goals.filter(g=>g.id!==main.id):[];
+  document.getElementById("goalMini").innerHTML=rest.length?rest.slice(0,4).map(g=>{let p=Math.min(100,g.target?g.done/g.target*100:0);return `<div class="barline"><span>${esc(g.name)}</span><div class="progress"><div class="bar" style="width:${p}%"></div></div><b>${g.done}/${g.target}ч</b></div>`}).join(""):"<p class='muted'>Других целей пока нет.</p>";
   document.getElementById("timerGoal").innerHTML=`<option value="">Без цели</option>`+data.goals.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join("");
 }
 function renderHabits(){
